@@ -51,6 +51,10 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# In root directory
+echo "backend/.env" >> .gitignore
+echo "frontend/.env" >> .gitignore
+
 # Translations
 *.mo
 *.pot
@@ -205,3 +209,5 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+backend/.env
+frontend/.env
