@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Create axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -10,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// API methods
 export const apiService = {
   // Health check
   healthCheck: async () => {
@@ -32,8 +30,14 @@ export const apiService = {
   },
 
   // Remove background
-  removeBackground: async (imageUrl) => {
-    const response = await api.post('/ai/remove-bg', { image_url: imageUrl });
+  removeBackground: async (filename) => {
+    const response = await api.post('/ai/remove-bg', { filename });
+    return response.data;
+  },
+
+  // Generate background
+  generateBackground: async (prompt) => {
+    const response = await api.post('/ai/generate-bg', { preset: prompt });
     return response.data;
   },
 

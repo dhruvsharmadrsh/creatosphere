@@ -37,11 +37,9 @@ export default function Editor() {
 
     setSelectedFile(file);
     
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreviewUrl(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    // Create preview URL using createObjectURL for better performance
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
   };
 
   const handleUploadToServer = async () => {
@@ -57,6 +55,10 @@ export default function Editor() {
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.3));
   
   const handleClearCanvas = () => {
+    // Revoke the object URL to prevent memory leaks
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setPreviewUrl(null);
     setSelectedFile(null);
     setPosX(0);
@@ -231,6 +233,29 @@ export default function Editor() {
                   PNG, JPG up to 10MB
                 </p>
               </div>
+
+              {/* Preview Image */}
+              {previewUrl && (
+                <div style={{
+                  marginTop: '0.75rem',
+                  border: '1px solid #334155',
+                  borderRadius: '0.5rem',
+                  padding: '0.5rem',
+                  backgroundColor: '#0a0f1e'
+                }}>
+                  <img 
+                    src={previewUrl} 
+                    alt="Preview" 
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '256px',
+                      objectFit: 'contain',
+                      borderRadius: '0.25rem'
+                    }}
+                  />
+                </div>
+              )}
 
               <input
                 ref={fileInputRef}
